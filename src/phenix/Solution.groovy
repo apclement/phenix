@@ -38,7 +38,7 @@ class Solution {
                     }
 
                     String toString() {
-                        "$id ($qty)"
+                        "$id ($qty, $ca, $accQty, $accCa)"
                     }
                 }
 
@@ -148,14 +148,14 @@ class Solution {
         def sortedDailyStats = stats.daylies.values().sort { it.id }.reverse()
 
         // prune and make output dir
-        new File("output/").delete()
+        new File("output/").deleteDir()
         new File("output/").mkdir()
 
         // top_100_ventes_<MAGASIN_ID>_YYYYMMDD.data
         // top_100_ventes_GLOBAL_YYYYMMDD.data`
-        sortedDailyStats.eachWithIndex { d, i ->
+        sortedDailyStats.each { d ->
             def dateLabel = d.id.toDate().format("YYYYMMdd")
-            d.shops.values().each { Stat.Daily.Shop s ->
+            d.shops.values().each { s ->
                 new File("output/top_100_ventes_${s.id}_${dateLabel}.data").withWriter { w ->
                     new CSVWriter(w).writeAll(s.top100.collect { [it.id] as String[] })
                 }
@@ -165,7 +165,7 @@ class Solution {
                 new File("output/top_100_ventes_${s.id}_${dateLabel}-J7.data").withWriter { w ->
                     new CSVWriter(w).writeAll(s.top100Acc.collect { [it.id] as String[] })
                 }
-                new File("output/top_100_ca_${s.id}_${dateLabel}_J7.data").withWriter { w ->
+                new File("output/top_100_ca_${s.id}_${dateLabel}-J7.data").withWriter { w ->
                     new CSVWriter(w).writeAll(s.top100AccCA.collect { [it.id] as String[] })
                 }
             }
