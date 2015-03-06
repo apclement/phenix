@@ -1,7 +1,7 @@
 # phenix
 carrefour test
 
-to execute do
+To run the script:
 ```
 mvn exec:java
 ```
